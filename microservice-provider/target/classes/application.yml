@@ -1,0 +1,14 @@
+server:
+  port: 8100
+spring:
+  application:
+    name: microservice-provider
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:admin123@localhost:7000/eureka/
+      #以下是注册到eureka集群，建议全部节点都写
+      #defaultZone: http://peer1:7100/eureka/,http://peer2:7200/eureka/,http://peer3:7300/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}

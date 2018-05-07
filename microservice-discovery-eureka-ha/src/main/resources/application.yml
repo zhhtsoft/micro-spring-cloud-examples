@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: microservice-discovery-eureka-ha
+
+---
+server:
+  port: 7100
+spring:
+  profiles: peer1
+eureka:
+  instance:
+    hostname: peer1
+  client:
+    serviceUrl:
+      defaultZone: http://peer2:7200/eureka/,http://peer3:7300/eureka/
+
+---
+server:
+  port: 7200
+spring:
+  profiles: peer2
+eureka:
+  instance:
+    hostname: peer2
+  client:
+    serviceUrl:
+      defaultZone: http://peer1:7100/eureka/,http://peer3:7300/eureka/
+      
+
+---
+server:
+  port: 7300
+spring:
+  profiles: peer3
+eureka:
+  instance:
+    hostname: peer3
+  client:
+    serviceUrl:
+      defaultZone: http://peer1:7100/eureka/,http://peer2:7200/eureka/
+      
+

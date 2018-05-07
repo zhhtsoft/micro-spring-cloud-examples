@@ -1,0 +1,21 @@
+server:
+  port: 9100
+  
+spring:
+  application:
+    name: microservice-consumer-feign-hystrix
+    
+security:
+  user:
+    name: admin
+    password: admin123
+    
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7000/eureka/
+      
+#需要启用hystrix配置
+feign.hystrix.enabled: true
