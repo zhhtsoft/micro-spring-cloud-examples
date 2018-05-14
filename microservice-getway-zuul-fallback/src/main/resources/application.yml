@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: microservice-getway-zuul
+    
+server:
+  port: 7070
+  
+security:
+  user:
+    name: admin
+    password: admin123
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7000/eureka/
+      
+zuul:
+  ignoredServices: '*' #忽悠所有微服务代理，忽略一个可以指定，可以是用逗号分隔多个
+  routes:
+    microservice-provider-v1: #微服务名
+      path: /myusers/**
+      strip-prefix: true 
+  prefix: /2.0 #需要写斜杠‘/’
+  #=============================================
+      #1. strip-prefix: true 默认true 
+      #访问地址：http://localhost:7070/2.0/myusers/user/getUserById?id=1
+      #服务端提供:/user/getUserById 接口
+      
+      #2. strip-prefix: false
+      #访问地址：http://localhost:7070/2.0/myusers/user/getUserById?id=1
+      #服务端提供:/myusers/user/getUserById 接口
+      
+  
+  
+ribbon.restclient.enabled: true #zuul使用的默认HTTP客户端现在由Apache HTTP Client支持,推荐使用restclient   
+
+logging:
+  level:
+    com.netflix: debug

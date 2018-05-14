@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: microservice-getway-zuul
+    
+server:
+  port: 7070
+  
+security:
+  user:
+    name: admin
+    password: admin123
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7000/eureka/
+      
+zuul:
+  #ignoredServices: '*' #忽悠所有微服务代理，忽略一个可以指定，可以是用逗号分隔多个
+  routes:
+    usertest: #随便写，保证唯一就行
+      path: /myusers/**
+      url: http://localhost:8100 #主要用于老系统切换为微服务，
+                                             #URL路由不会被执行为HystrixCommand，也不能使用Ribbon对多个URL进行负载平衡
+    
+    

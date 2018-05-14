@@ -18,6 +18,11 @@
 		<module>microservice-provider</module>
 		<module>microservice-discovery-eureka</module>
 		<module>microservice-discovery-eureka-ha</module>
+		<module>microservice-getway-zuul</module>
+		<module>microservice-getway-zuul-regex</module>
+		<module>microservice-getway-zuul-fallback</module>
+		<module>microservice-getway-zuul-filter</module>
+		<module>microservice-sidecar</module>
 	</modules>
 
 	<parent>

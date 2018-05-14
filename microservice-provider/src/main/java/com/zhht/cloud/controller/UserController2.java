@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zhht.cloud.entity.User;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/myusers")
+public class UserController2 {
 	
-	private static Logger log = LoggerFactory.getLogger(UserController.class);
+	private static Logger log = LoggerFactory.getLogger(UserController2.class);
 	
-	@RequestMapping(value="/getUserById",method=RequestMethod.GET)
+	@RequestMapping(value="/user/getUserById",method=RequestMethod.GET)
 	public User getUserById(@RequestParam(name="id") int id){
 		log.info("method start:User com.zhht.cloud.controller.UserController.getUserById");
 		if(id == 1){

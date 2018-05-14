@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.zhht.cloud.entity.User;
+
 import feign.hystrix.FallbackFactory;
 
 /**
@@ -19,7 +21,16 @@ public class UserFeignClientFactory implements FallbackFactory<UserFeignClient> 
 	@Override
 	public UserFeignClient create(Throwable arg0) {
 		logger.info("异常日志："+arg0.getMessage());
-		return null;
+		return new UserFeignClientExcpFactory();
 	}
 
+}
+
+class UserFeignClientExcpFactory implements UserFeignClient{
+
+	@Override
+	public User getUserById(int id) {
+		return null;
+	}
+	
 }

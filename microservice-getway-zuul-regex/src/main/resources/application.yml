@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: microservice-getway-zuul-regex
+    
+server:
+  port: 7070
+  
+security:
+  user:
+    name: admin
+    password: admin123
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7000/eureka/
+      
+#修改：provider spring.application.name=microservice-provider-v1
+#访问：http://localhost:7070/v1/microservice-provider/user/getUserById?id=1
