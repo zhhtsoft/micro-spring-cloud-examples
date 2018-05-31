@@ -16,6 +16,7 @@
 		<module>microservice-consumer-feign-customizing</module>
 		<module>microservice-consumer-feign-with-hystrix</module>
 		<module>microservice-provider</module>
+		<module>microservice-provider-user</module>
 		<module>microservice-discovery-eureka</module>
 		<module>microservice-discovery-eureka-ha</module>
 		<module>microservice-getway-zuul</module>

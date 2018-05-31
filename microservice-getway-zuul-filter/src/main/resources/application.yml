@@ -19,14 +19,18 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://${security.user.name}:${security.user.password}@localhost:7000/eureka/
-      
+  instance:
+    prefer-ip-address: true
+    
 zuul:
   ignoredServices: '*' #忽悠所有微服务代理，忽略一个可以指定，可以是用逗号分隔多个
   routes:
-    microservice-provider-v1: #微服务名
+    microservice-provider-user: #微服务名
       path: /myusers/**
       strip-prefix: true 
     microservice-provider-v2: #微服务名
+#禁用具体的filter
+#zuul.SendResponseFilter.post.disable: true
       path: /mymoves/**
       strip-prefix: true 
     legacy:

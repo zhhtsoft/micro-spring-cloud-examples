@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
@@ -27,11 +28,19 @@ public class LoginFilter extends ZuulFilter {
 	private static final Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 	@Override
 	public Object run() {
-		HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
+		
+		RequestContext ctx = RequestContext.getCurrentContext();
+		HttpServletRequest request = ctx.getRequest();
 		String sessionId = request.getParameter("session-id");
 		if(sessionId == null) {
+			ctx.setSendZuulResponse(false);
+			ctx.setResponseStatusCode(HttpStatus.FORBIDDEN.value());
+//			ctx.setResponseBody("{\"result\":\"no access!\"}");
 			logger.debug("当前用户登录信息为空！");
+			ctx.set("success", false);
 			writeResponse();
+		}else {
+			ctx.set("success", true);
 		}
 		return null;
 	}
