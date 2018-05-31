@@ -1,0 +1,43 @@
+# maven ignore
+target/
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+
+# eclipse ignore
+.settings/
+.externalToolBuilders/
+.project
+.classpath
+
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws
+
+# netbeans ignore
+nbproject/
+META-INF/
+nbactions.xml
+nb-configuration.xml
+
+# temp ignore
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+*.java~
+*.properties~
+*.xml~
+logs/
+logs
+
+# system ignore
+.DS_Store
+Thumbs.db
+
+classes/
