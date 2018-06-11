@@ -24,6 +24,7 @@
 		<module>microservice-getway-zuul-fallback</module>
 		<module>microservice-getway-zuul-filter</module>
 		<module>microservice-sidecar</module>
+		<module>microservice-sleuth</module>
 	</modules>
 
 	<parent>

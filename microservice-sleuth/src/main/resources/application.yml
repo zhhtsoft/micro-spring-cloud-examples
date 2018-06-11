@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: microservice-sidecar
+    
+server:
+  port: 7080
+  
+security:
+  user:
+    name: admin
+    password: admin123
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7000/eureka/
+      
+sidecar:
+  port: 8888
+  health-uri: http://localhost:8888/health.json #其他异构语言服务地址
+  #异构微服务个数和sidecar个数相当，目前不合理，可以考虑将异构微服务通过
+  #调用restful api方式注册到eruka中
+  
+ribbon.restclient.enabled: true #zuul使用的默认HTTP客户端现在由Apache HTTP Client支持,推荐使用restclient   
+
+logging:
+  level:
+    com.netflix: debug
