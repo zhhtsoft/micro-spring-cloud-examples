@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: microservice-consumer-feign-with-hystrix
 Implementation-Version: 0.0.1-SNAPSHOT
-Built-By: quan
+Built-By: ningquan
 Implementation-Vendor-Id: com.zhht.cloud
-Build-Jdk: 1.8.0_171
+Build-Jdk: 1.8.0_141
 Implementation-URL: http://projects.spring.io/spring-boot/microservice
  -spring-cloud/microservice-consumer-feign-with-hystrix/
 Created-By: Maven Integration for Eclipse
