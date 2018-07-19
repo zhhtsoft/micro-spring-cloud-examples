@@ -3,7 +3,7 @@ spring:
     name: microservice-getway-zuul
     
 server:
-  port: 7070
+  port: 7000
   
 security:
   user:
@@ -13,7 +13,7 @@ security:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7000/eureka/
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7100/eureka/
       
 zuul:
   ignoredServices: '*' #忽悠所有微服务代理，忽略一个可以指定，可以是用逗号分隔多个
@@ -24,9 +24,12 @@ zuul:
     microservice-provider-v2: #微服务名
       path: /mymoves/**
       strip-prefix: true 
-    legacy:
-      path: /** #前面路由规则匹配失败会走legacy规则，必须使用yml格式
-  prefix: /2.0 #需要写斜杠‘/’
+    api-demo: #demo
+      path: /demo/**
+      strip-prefix: false 
+#    legacy:
+#      path: /** #前面路由规则匹配失败会走legacy规则，必须使用yml格式
+#  prefix: /2.0 #需要写斜杠‘/’
 
   #=============================================
       #1. strip-prefix: true 默认true 
@@ -39,7 +42,7 @@ zuul:
       
   
   
-ribbon.restclient.enabled: true #zuul使用的默认HTTP客户端现在由Apache HTTP Client支持,推荐使用restclient   
+#ribbon.restclient.enabled: true #zuul使用的默认HTTP客户端现在由Apache HTTP Client支持,推荐使用restclient   
 
 logging:
   level:

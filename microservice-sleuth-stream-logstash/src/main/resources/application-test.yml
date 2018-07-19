@@ -1,0 +1,16 @@
+logging:
+  config: classpath:logback.xml
+  appender: file
+  path: /data/testlogs/
+  pattern:
+   level: info
+   
+security:
+  user:
+    name: admin
+    password: admin123
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@10.110.60.171:7100/eureka/
+      

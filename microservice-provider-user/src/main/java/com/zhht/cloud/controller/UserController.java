@@ -24,8 +24,8 @@ public class UserController {
 		
 		//Request-Authorization
 		String authHeader = request.getHeader("Request-Authorization");
-		log.info("zuul pass header={}",authHeader);
-		log.info("method start:User com.zhht.cloud.controller.UserController.getUserById");
+		log.info("微服务：microservice-provider-user:zuul pass header={}",authHeader);
+		log.info("微服务：microservice-provider-user:UserController.getUserById");
 		if(id == 1){
 			return new User("张三",10,new Date());
 		}

@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: microservice-sleuth-rabbit
+  #rabbit
+  rabbitmq:
+    host: 10.110.60.73
+    port: 5672
+    username: ningquan
+    password: ningquan
+  #日志采样百分比配置
+  sleuth:
+    sampler:
+      percentage: 1
+  zipkin:
+    rabbitmq:
+      queue: myzipkin
+#    enabled: false
+#  zipkin:
+#    sender:
+#      type: RABBIT
+#  zipkin:
+#    enabled: true
+#    message-timeout: 5
+#    base-url: http://localhost:9411 #http方式调用
+server:
+  port: 7799
+  
+security:
+  user:
+    name: admin
+    password: admin123
+    
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7100/eureka/
+      
+#logging:
+#  config: classpath:logback.xml
+#  appender: console
+#  path: D:/data/testlogs/
+#  pattern:
+#   level: info
+    

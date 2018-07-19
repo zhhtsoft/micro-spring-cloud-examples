@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.zhht.cloud</groupId>
@@ -13,6 +14,7 @@
 		<module>microservice-consumer-ribbon-without-eureka</module>
 		<module>microservice-consumer-ribbon-with-hystrix</module>
 		<module>microservice-consumer-feign</module>
+		<module>microservice-consumer-feign-kafka</module>
 		<module>microservice-consumer-feign-customizing</module>
 		<module>microservice-consumer-feign-with-hystrix</module>
 		<module>microservice-provider</module>
@@ -24,13 +26,25 @@
 		<module>microservice-getway-zuul-fallback</module>
 		<module>microservice-getway-zuul-filter</module>
 		<module>microservice-sidecar</module>
-		<module>microservice-sleuth</module>
+		<module>microservice-sleuth-http</module>
+		<module>microservice-sleuth-stream</module>
+		<module>microservice-sleuth-stream-logstash</module>
+		<module>microservice-zipin-server</module>
+		<module>microservice-zipin-stream</module>
+		
+		<module>microservice-sleuth-rabbit</module>
+		<module>microservice-zipin-stream-rabbit</module>
+		<module>microservice-zipin-stream-rabbit-es</module>
+
+		<module>microservice-sleuth-kafka</module>
+		<module>microservice-zipkin-stream-kafka</module>
+		<module>microservice-zipkin-stream-kafka-es</module>
 	</modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.10.RELEASE</version>
+		<version>1.5.13.RELEASE</version>
 		<relativePath />
 	</parent>
 
@@ -38,7 +52,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<spring-cloud.version>Edgware.SR3</spring-cloud.version>
+		<spring-cloud.version>Edgware.SR4</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -47,8 +61,20 @@
 			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -66,11 +92,98 @@
 
 	<build>
 		<plugins>
-			<plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<target>1.8</target>
+				</configuration>
+		</plugin>
+		<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<useDefaultDelimiters>true</useDefaultDelimiters>
+				</configuration>
+			</plugin>
+			<!-- <plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					去掉子模块BOOT-INF
+        			<skip>true</skip>
+				</configuration>
+			</plugin> -->
+			
+			<!-- <plugin>
+				<groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                	<archive>
+                		<manifest>
+                			<addClasspath>true</addClasspath>
+                			<classpathPrefix>lib/</classpathPrefix>
+                		</manifest>
+                	</archive>
+                	<excludes>  
+				       <exclude>src/main/resources/*.yml</exclude> 
+				        <exclude>src/main/resources/*.properties</exclude> 
+				         <exclude>src/main/resources/*.xml</exclude> 
+				    </excludes>
+                </configuration>
+			</plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>src/assembly/conf/assembly-config.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
 
+	<!-- 不同环境配置 -->
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<environment>dev</environment>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<environment>test</environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>pre</id>
+			<properties>
+				<environment>pre</environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<environment>prod</environment>
+			</properties>
+		</profile>
+	</profiles>
 </project>

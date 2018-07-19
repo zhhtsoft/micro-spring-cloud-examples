@@ -1,0 +1,39 @@
+server:
+  port: 9100
+spring:
+  application:
+    mainclass: com.zhht.cloud.ConsumerFeignApplication
+    name: microservice-consumer-feign
+  rabbitmq:
+    host: 10.110.60.73
+    port: 5672
+    username: ningquan
+    password: ningquan
+  sleuth:
+    enabled: true
+    sampler:
+      percentage: 1
+  zipkin:
+    enabled: true
+    rabbitmq:
+      queue: myzipkin
+  profiles:
+    active: ${environment}
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:admin123@localhost:7100/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}
+    
+logging:
+  config: classpath:logback-spring.xml
+  appender: console
+  path: D:/data/testlogs/
+  level:
+    com.netflix: warn
+  pattern:
+   level: info
+    

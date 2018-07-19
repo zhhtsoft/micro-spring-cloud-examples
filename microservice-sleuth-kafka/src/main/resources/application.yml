@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: microservice-sleuth-kafka
+  #日志采样百分比配置
+  sleuth:
+    sampler:
+      percentage: 1
+  kafka:
+#    client-id: ${spring.application.name}
+    producer:
+      client-id: ${spring.application.name}
+    bootstrap-servers:
+    - 10.110.59.23:9092
+#    template:
+#      default-topic: myzipkin
+server:
+  port: 7799
+  
+security:
+  user:
+    name: admin
+    password: admin123
+    
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7100/eureka/
+      
+#logging:
+#  config: classpath:logback.xml
+#  appender: console
+#  path: D:/data/testlogs/
+#  pattern:
+#   level: info
+logging:
+  level:
+    com.netflix: warn
+    

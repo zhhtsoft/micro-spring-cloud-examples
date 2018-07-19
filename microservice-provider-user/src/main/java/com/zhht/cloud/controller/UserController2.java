@@ -19,7 +19,7 @@ public class UserController2 {
 	
 	@RequestMapping(value="/user/getUserById",method=RequestMethod.GET)
 	public User getUserById(@RequestParam(name="id") int id){
-		log.info("method start:User com.zhht.cloud.controller.UserController.getUserById");
+		log.info("微服务：microservice-provider-user:UserController.getUserById");
 		if(id == 1){
 			return new User("张三",10,new Date());
 		}

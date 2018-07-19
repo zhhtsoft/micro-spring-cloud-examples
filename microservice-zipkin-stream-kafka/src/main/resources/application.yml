@@ -1,0 +1,40 @@
+server:
+  port: 9411
+#zipkin.autoconfigure.collector.kafka.ZipkinKafkaCollectorProperties
+zipkin:
+  collector:
+    kafka:
+      zookeeper: 10.110.60.223:2181
+      topic: zipkin
+      groupId: zipkin
+      streams: 2
+  storage:
+    type: mysql
+spring:
+  application:
+    name: microservice-zipkin-stream-kafka
+  datasource:
+    url: jdbc:mysql://10.110.60.228:3306/test?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: aiparkcity
+    password: 123456
+    #连接池配置
+    type: com.zaxxer.hikari.HikariDataSource
+    initialize: true
+    continue-on-error: true
+  
+security:
+  user:
+    name: admin
+    password: admin123
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7100/eureka/
+
+logging:
+  pattern:
+    level: info
+  level:
+    com.netflix: info

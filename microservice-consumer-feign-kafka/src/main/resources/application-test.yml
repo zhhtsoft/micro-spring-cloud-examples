@@ -1,0 +1,17 @@
+server:
+  port: 9200
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://admin:admin123@localhost:7100/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}
+    
+logging:
+  appender: file
+  path: /data/testlogs/
+  level:
+    com.netflix: warn
+  pattern:
+   level: info

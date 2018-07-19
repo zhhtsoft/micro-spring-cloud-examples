@@ -6,7 +6,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://admin:admin123@localhost:7000/eureka/
+      defaultZone: http://admin:admin123@localhost:7100/eureka/
       #以下是注册到eureka集群，建议全部节点都写
       #defaultZone: http://peer1:7100/eureka/,http://peer2:7200/eureka/,http://peer3:7300/eureka/
   instance:

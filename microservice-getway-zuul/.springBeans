@@ -9,6 +9,7 @@
 	<configs>
 	</configs>
 	<autoconfigs>
+		<config>java:com.zhht.cloud.ZuulApplication</config>
 	</autoconfigs>
 	<configSets>
 	</configSets>
