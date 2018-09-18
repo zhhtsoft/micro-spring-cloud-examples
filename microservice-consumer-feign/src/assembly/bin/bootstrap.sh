@@ -1,5 +1,5 @@
 #!/bin/bash
-# This bootstap script support mininum of JDK 1.8 ,with inner webserver of Tomcat8.
+# This bootstap script support minimum of JDK 1.8 ,with inner webserver of Tomcat8.
 # please regarding copyright ownership.
 # author:ningquan
 # writted:2018-06-26
@@ -13,6 +13,9 @@ JAVA_OPTS="-server -Xms1G -Xmx1G -Xss512k -XX:MetaspaceSize=256m -XX:MaxMetaspac
 BOOT_LOGDIR='/data/logs'
 source /etc/profile
 #JAVACMD=$JAVA_HOME/bin/java,search jre.
+echofont(){
+ echo -e "\033[37;"$1"m $2 \033[0m"
+}
 if [ -z $JAVACMD ] ; then
   if [ -n $JAVA_HOME  ] ; then
       JAVACMD=$JAVA_HOME/bin/java
@@ -31,59 +34,59 @@ if [ ! -x "$JAVACMD" ] ; then
   echo "  We cannot execute $JAVACMD"
   exit 1
 fi
-echo "JAVACMD="$JAVACMD
+echofont 32 "JAVACMD="$JAVACMD
 
 #setting perform path
 BASEDIR=`dirname $0`/..
 BASEDIR=`(cd $BASEDIR; pwd)`
-echo "BASEDIR="$BASEDIR
+echofont 32 "BASEDIR="$BASEDIR
 
 #grep -w 'port:' application.yml |sed s/[[:space:]]//g |cut -d: -f 2
 APPLICATION_CONFIG_FILE="$BASEDIR/conf/application.yml"
 if [ -f $APPLICATION_CONFIG_FILE ] ;then
  if [ ! -r $APPLICATION_CONFIG_FILE ] ; then
-   echo "Error: current user can't read file application.yml,suggest use root user"
+   echofont 31 "Error: current user can't read file application.yml,suggest use root user"
    exit 1
  fi
 else
-  echo "Error: not found application.yml in your config path /conf"
+  echofont 31 "Error: not found application.yml in your config path /conf"
   exit 1
 fi
 
-SERVER_PORT=`grep -w 'port:' $APPLICATION_CONFIG_FILE |sed s/[[:space:]]//g |awk -F':' '{print $2}'`
+SERVER_PORT=`grep -E '^[^#]*+port:' $APPLICATION_CONFIG_FILE |sed s/[[:space:]]//g |awk -F':' '/70|71|72|73|74|80|81|82|83|84|90|91|92|93|94/{print $2}'`
 #echo "server.port="$SERVER_PORT
 #profiles active
-PROFILE_ACTIVE=`grep -w 'active:' $APPLICATION_CONFIG_FILE | sed s/[[:space:]]//g | awk -F':' '{print $2}'`
-echo "spring.profiles.active="$PROFILE_ACTIVE
+PROFILE_ACTIVE=`grep -E '^[^#max_]*+active:' ../conf/application.yml | sed s/[[:space:]]//g | awk -F':' '{print $2}'`
+echofont 32 "spring.profiles.active="$PROFILE_ACTIVE
 SERVER_PROFILE_ACTIVE_FILE=""
 if [ -n $PROFILE_ACTIVE ] ; then
  eval SERVER_PROFILE_ACTIVE_FILE='$BASEDIR/conf/application-"$PROFILE_ACTIVE".yml'
- echo "spring.profiles.active.file="$SERVER_PROFILE_ACTIVE_FILE
+ echofont 32 "spring.profiles.active.file="$SERVER_PROFILE_ACTIVE_FILE
  if [ -f $SERVER_PROFILE_ACTIVE_FILE ] ;then
    if [ ! -r $SERVER_PROFILE_ACTIVE_FILE ] ; then
-     echo "Error: current user can't read file:application-"$PROFILE_ACTIVE".yml,suggest use root user"
+     echofont 31 "Error: current user can't read file:application-"$PROFILE_ACTIVE".yml,suggest use root user"
      exit 1
    fi
  fi 
 else
-  echo "warning: not found profile active file:application-"$PROFILE_ACTIVE".yml"
+  echofont 33 "Warning: not found profile active file:application-"$PROFILE_ACTIVE".yml"
 fi
 
 #according to profile active of environment that get ralative config
 if [ ! -z $SERVER_PROFILE_ACTIVE_FILE ] ;then
- SERVER_PORT=`grep -w 'port:' $SERVER_PROFILE_ACTIVE_FILE |sed s/[[:space:]]//g |awk -F':' '{print $2}'`
- echo "final server.port="$SERVER_PORT
+ SERVER_PORT=`grep -E '^[^#]*+port:' $SERVER_PROFILE_ACTIVE_FILE |sed s/[[:space:]]//g |awk -F':' '/70|71|72|73|74|80|81|82|83|84|90|91|92|93|94/{print $2}'`
+ echofont 32 "final server.port="$SERVER_PORT
 fi 
 
 #get spring boot application main class,through springboot param 'spring.application.mainclass' property obtain.
 MAIN_CLASS=`grep -w 'mainclass:' $APPLICATION_CONFIG_FILE | sed s/[[:space:]]//g | awk -F':' '{print $2}'`
-APPLICATION_NAME=`grep -w 'name:' $APPLICATION_CONFIG_FILE | sed s/[[:space:]]//g | awk -F':' '{print $2}'`
-echo "application-name="$APPLICATION_NAME
+APPLICATION_NAME=`grep -w 'name:' $APPLICATION_CONFIG_FILE | sed s/[[:space:]]//g | awk -F':' '/micro|api/{print $2}'`
+echofont 32 "application-name="$APPLICATION_NAME
 if [ -z $MAIN_CLASS ] ;then
- echo "Error: springboot application not set main class,please check config file of application.yml and param is spring.application.mainclass"
+ echofont 31 "Error: springboot application not set main class,please check config file of application.yml and set property: spring.application.mainclass"
  exit 1
 fi
-echo "main-class:"$MAIN_CLASS
+echofont 32 "main-class:"$MAIN_CLASS
 
 CLASSPATH="$BASEDIR"/conf:"$BASEDIR"/boot/*:"$BASEDIR"/lib/*:$CLASSPATH
 #echo "CLASSPATH=$CLASSPATH"
@@ -98,26 +101,29 @@ check_exist(){
  return 0
 }
 status(){
- echo "start check current server status:"
+ echofont 32 "start check current server status:"
  check_exist
  if [ $? -eq 0 ] ; then
-   echo "application:"$APPLICATION_NAME "is running. The process pid:"$APPLICATION_PID
+   echofont 32 "application:"$APPLICATION_NAME" is running. The process pid:"$APPLICATION_PID
  else
-   echo "application:"$APPLICATION_NAME "is not running"
+   echofont 33 "application:"$APPLICATION_NAME" is not running"
  fi
 }
 
 start(){
- echo "==============start application server================="
+ echofont 32 "=================start application server====================="
+ if [ ! -d "$BOOT_LOGDIR/$APPLICATION_NAME/" ] ; then
+   `mkdir -p "$BOOT_LOGDIR/$APPLICATION_NAME/"`
+ fi
  check_exist
  if [ $? -eq 0 ] ; then
-   echo "Error:application:"$APPLICATION_NAME "is already running. The process pid="$APPLICATION_PID
+   echofont 31 "Error:application:"$APPLICATION_NAME" is already running. The process pid="$APPLICATION_PID
    exit 1
  fi
  if [ -z "$OPTS_MEMORY" ] ; then
     JAVA_OPTS="-server -Xms1G -Xmx1G -Xss512k -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m"
  fi
- nohup "$JAVACMD" $JAVA_OPTS \
+ nohup $JAVACMD $JAVA_OPTS \
   -classpath "$CLASSPATH" \
   -Dbasedir="$BASEDIR" \
   -Dfile.encoding="UTF-8" \
@@ -133,37 +139,30 @@ start(){
   -XX:-OmitStackTraceInFastThrow \
   -XX:HeapDumpPath="$BOOT_LOGDIR/" \
   -XX:ErrorFile="$BOOT_LOGDIR/$APPLICATION_NAME/javadump_error_%p.log" \
-#  -XX:+PrintGCDetails \
-#  -XX:+PrintGCTimeStamps \
-#  -XX:+PrintHeapAtGC \
-#  -Xloggc:$BOOT_LOGDIR/$APPLICATION_NAME/javagc.log \
   $MAIN_CLASS \
   "$@" >$BOOT_LOGDIR/$APPLICATION_NAME/catalina-out.log 2>&1 &
   #APPLICATION_PID=$$
   #echo "checking process......"
   sleep 5
   #status
-  runpid=`ps -aux |grep java |grep $MAIN_CLASS |awk '{print $2}'`
-  if [ -n $runpid ] ; then
+  runpid=`ps aux |grep java |grep $APPLICATION_NAME |awk '{print $2}'`
+  if [ ! -z $runpid ] ; then
     echo $runpid > server.pid
-
-    echo "====================server start success!======================"
-
-    echo "===========Ning Quan wish you have a good job!================"
-
+    echofont 32 "===================server start success!======================"
+    echofont 32 "===========Ning Quan wish you have a good job!================"
   else
-    echo "Error:server start fail,please cat /data/logs/cataout.log"
+    echofont 31 "Error:server start fail,please cat /data/logs/cataout.log"
   fi
 }
 
 restart(){
- echo "==============restart application server================="
+ echofont 32 "==============restart application server================="
  stop
  start
 }
 
 stop(){
- echo "==============stop application server start================="
+ echofont 32 "===========stop application server start================="
  check_exist
  if [ $? -eq 0 ] ; then 
    `kill  $APPLICATION_PID`
@@ -171,17 +170,15 @@ stop(){
    check_exist
    if [ $? -eq 0 ] ; then
      stop
-   else
-     echo "==============stop application server finish!================="
    fi
-   exit 1
+   #exit 1
  fi
- echo "==============stop application server finish!================="
+ echofont 32 "=========stop application server finish!================="
 }
 
 usage(){
- echo "Usage: sh bootstrap.sh [start|stop|restart|status]"
- echo "eg: ./bootstrap.sh start"
+ echofont 33 "Usage: sh bootstrap.sh [start|stop|restart|status]"
+ echofont 33 "eg: ./bootstrap.sh start"
  exit 1 
 }
 #CHECK APPLICATION PROCESS STATUS
@@ -192,6 +189,9 @@ check_exist(){
    return 1
  fi
  return 0
+}
+echofont(){
+ echo -e "\033[37;"$1"m $2 \033[0m"
 }
 case "$1" in
   "start")

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>  
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
-	<conversionRule conversionWord="sh" converterClass="com.zhht.cloud.LogIpConverter" />
+	<conversionRule conversionWord="sh" converterClass="com.zhht.LogIpConverter" />
     <springProperty scope="context" name="logLevel" source="logging.pattern.level" defaultValue="info"/>
     <springProperty scope="context" name="logPath" source="logging.path" defaultValue="/data/logs/"/>
     <springProperty scope="context" name="logAppender" source="logging.appender" defaultValue="file"/>
@@ -14,7 +14,7 @@
 			<charset>utf8</charset>
 		</encoder>
     </appender>  
- <!--    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">  
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
             <fileNamePattern>${logPath}/${serverName}/${serverName}-%d{yyyy-MM-dd}.log</fileNamePattern>  
             <maxHistory>${maxHistory}</maxHistory>  
@@ -22,7 +22,8 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<pattern>${FILE_LOG_PATTERN}</pattern>
 		</encoder>
-    </appender>   -->
+    </appender>  
+    <!--
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">  
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
             <fileNamePattern>${logPath}/${serverName}/${serverName}-%d{yyyy-MM-dd}.log</fileNamePattern>  
@@ -30,10 +31,11 @@
         </rollingPolicy>  
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<pattern>
-				{"@timestamp":%d{yyyy-MM-dd HH:mm:ss.SSS},"host":"%sh","@version":1,"severity": "%level","service": "${serverName:-}","trace": "%X{X-B3-TraceId:-}","span": "%X{X-B3-SpanId:-}","parent": "%X{X-B3-ParentSpanId:-}","exportable": "%X{X-Span-Export:-}","pid": "${PID:-}","thread": "%thread","class": "%logger{40}","rest": "%message"}%n
+				{"@timestamp":%d{yyyy-MM-dd HH:mm:ss.SSS},"host":"%sh","severity": "%level","service": "${serverName:-}","trace": "%X{X-B3-TraceId:-}","span": "%X{X-B3-SpanId:-}","parent": "%X{X-B3-ParentSpanId:-}","exportable": "%X{X-Span-Export:-}","pid": "${PID:-}","thread": "%thread","class": "%logger{40}","rest": "%message"}%n
 			</pattern>
 		</encoder>
-    </appender>  
+    </appender>
+     -->  
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
     	<!-- <file>${LOG_FILE}.json</file> -->
     	<!-- <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -52,6 +54,7 @@
 						{
 						"severity": "%level",
 						"service": "${serverName:-}",
+						"tag": "${serverName:-}",
 						"trace": "%X{X-B3-TraceId:-}",
 						"span": "%X{X-B3-SpanId:-}",
 						"parent": "%X{X-B3-ParentSpanId:-}",

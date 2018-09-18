@@ -9,12 +9,14 @@ spring:
       client-id: ${spring.application.name}
     bootstrap-servers:
     - 10.110.59.23:9092
+    - 10.110.59.24:9092
+    - 10.110.59.25:9092
   sleuth:
     enabled: true
     sampler:
       percentage: 1
-#  profiles:
-#    active: ${environment}
+  profiles:
+    active: ${environment}
 eureka:
   client:
     serviceUrl:
@@ -22,12 +24,19 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}
-    
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: basic
+        
 logging:
-  appender: console
-  path: D:/data/testlogs/
+  appender: file
+  path: D:/data/logs/
   level:
     com.netflix: warn
+    com.zhht.cloud.UserFeignClient: debug
   pattern:
    level: info
     

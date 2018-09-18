@@ -27,13 +27,20 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}
-    
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: basic
+        
 logging:
   config: classpath:logback-spring.xml
   appender: console
   path: D:/data/testlogs/
   level:
     com.netflix: warn
+    com.zhht.cloud.UserFeignClient: debug
   pattern:
    level: info
     

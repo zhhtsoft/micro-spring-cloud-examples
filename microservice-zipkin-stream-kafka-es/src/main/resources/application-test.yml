@@ -1,5 +1,11 @@
 server:
-  port: 9200
+  port: 7300
+  
+security:
+  user:
+    name: admin
+    password: admin123
+    
 eureka:
   client:
     serviceUrl:
@@ -7,16 +13,10 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${server.port}
-feign:
-  client:
-    config:
-      default:
-        loggerLevel: FULL 
 logging:
   appender: file
   path: /data/logs/
   level:
     com.netflix: warn
-    com.zhht.cloud.UserFeignClient: debug
   pattern:
    level: info

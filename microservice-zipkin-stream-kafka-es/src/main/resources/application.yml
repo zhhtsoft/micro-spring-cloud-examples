@@ -1,7 +1,7 @@
 server:
-  port: 9411
+  port: 7300
 #zipkin.autoconfigure.collector.kafka.ZipkinKafkaCollectorProperties
-zipkin:
+zipkin: 
   collector:
     kafka:
       zookeeper: 10.110.60.223:2181
@@ -19,6 +19,9 @@ zipkin:
 spring:
   application:
     name: microservice-zipkin-stream-kafka-es
+    mainclass: com.zhht.StreamKafkaApplication
+  profiles:
+    active: test
   datasource:
     url: jdbc:mysql://10.110.60.228:3306/test?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
     driver-class-name: com.mysql.jdbc.Driver

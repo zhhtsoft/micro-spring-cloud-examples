@@ -1,6 +1,9 @@
 spring:
   application:
     name: microservice-sleuth-kafka
+    mainclass: com.zhht.SleuthKafkaApplication
+  profiles:
+    active: ${environment}
   #日志采样百分比配置
   sleuth:
     sampler:
@@ -11,6 +14,8 @@ spring:
       client-id: ${spring.application.name}
     bootstrap-servers:
     - 10.110.59.23:9092
+    - 10.110.59.24:9092
+    - 10.110.59.25:9092
 #    template:
 #      default-topic: myzipkin
 server:
@@ -26,14 +31,18 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://${security.user.name}:${security.user.password}@localhost:7100/eureka/
-      
-#logging:
-#  config: classpath:logback.xml
-#  appender: console
-#  path: D:/data/testlogs/
-#  pattern:
-#   level: info
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: basic
+        
 logging:
+  appender: file
+  path: D:/data/logs/
+  pattern:
+   level: info
   level:
     com.netflix: warn
-    
+    com.zhht.controller.UserFeignClient: debug

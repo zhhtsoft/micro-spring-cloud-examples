@@ -29,17 +29,18 @@ zuul:
       path: /myusers/**
       strip-prefix: true 
     microservice-provider-v2: #微服务名
-#禁用具体的filter
-#zuul.SendResponseFilter.post.disable: true
       path: /mymoves/**
       strip-prefix: true 
     legacy:
       path: /** #前面路由规则匹配失败会走legacy规则，必须使用yml格式
   prefix: /2.0 #需要写斜杠‘/’
 
+ #禁用具体的filter
+#zuul.SendResponseFilter.post.disable: true
+#FormBodyWrapperFilter
+zuul.FormBodyWrapperFilter.pre.disable: true 
   
-  
-ribbon.restclient.enabled: true #zuul使用的默认HTTP客户端现在由Apache HTTP Client支持,推荐使用restclient   
+#ribbon.restclient.enabled: true #zuul使用的默认HTTP客户端现在由Apache HTTP Client支持,推荐使用restclient   
 
 logging:
   level:
