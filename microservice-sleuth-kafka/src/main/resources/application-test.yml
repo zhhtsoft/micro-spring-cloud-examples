@@ -16,8 +16,9 @@ feign:
 logging:
   appender: file
   path: /data/logs/
-  level:
-    com.netflix: warn
-    com.zhht.controller.UserFeignClient: debug
   pattern:
-   level: info
+    level: info
+  level:
+    ROOT: info
+    com.zhht.feign: debug
+    com.zhht.controller.UserFeignClient: debug

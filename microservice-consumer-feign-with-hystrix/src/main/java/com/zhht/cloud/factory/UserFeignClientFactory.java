@@ -1,9 +1,10 @@
-package com.zhht.cloud.client;
+package com.zhht.cloud.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.zhht.cloud.client.UserFeignClient;
 import com.zhht.cloud.entity.User;
 
 import feign.hystrix.FallbackFactory;

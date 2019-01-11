@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.zhht.cloud.entity.User;
+import com.zhht.cloud.factory.UserFeignClientFactory;
 import com.zhht.cloud.fallback.UserFeignClientFallback;
 
 /**

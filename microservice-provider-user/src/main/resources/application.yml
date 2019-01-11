@@ -2,7 +2,7 @@ server:
   port: 8100
 spring:
   application:
-    name: microservice-provider-user
+    name: microservice-provider
   sleuth:
     sampler:
       percentage: 1

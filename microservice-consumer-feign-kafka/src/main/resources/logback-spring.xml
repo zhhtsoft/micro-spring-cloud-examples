@@ -2,73 +2,52 @@
 <configuration>  
 	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
 	<conversionRule conversionWord="sh" converterClass="com.zhht.cloud.LogIpConverter" />
-    <springProperty scope="context" name="logLevel" source="logging.pattern.level" defaultValue="info"/>
+     <springProperty scope="context" name="logLevel" source="logging.pattern.level" defaultValue="info"/>
     <springProperty scope="context" name="logPath" source="logging.path" defaultValue="/data/logs/"/>
     <springProperty scope="context" name="logAppender" source="logging.appender" defaultValue="file"/>
+    <springProperty scope="context" name="logRocketmqLevel" source="logging.rokectmq.level" defaultValue="warn"/>
     <springProperty scope="context" name="serverName" source="spring.application.name" defaultValue="microserver"/>
-    <property name="maxHistory" value="60"/>  
-    <property name="LOG_FILE" value="${BUILD_FOLDER:-build}/${springAppName}"/>​
+    <property name="maxHistory_file" value="30"/>  
+    <property name="maxHistory_beat" value="7"/>  
+    <property name="LOG_FILE" value="${BUILD_FOLDER:-build}/${springAppName}"/>
+    <property name="MICRO_CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(${serverName}){boldGreen} %clr([%sh]){boldGreen} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <property name="MICRO_FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } ${serverName} %sh --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">  
        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<pattern>${MICRO_CONSOLE_LOG_PATTERN}</pattern>
 			<charset>utf8</charset>
 		</encoder>
     </appender>  
- <!--    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">  
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
-            <fileNamePattern>${logPath}/${serverName}/${serverName}-%d{yyyy-MM-dd}.log</fileNamePattern>  
-            <maxHistory>${maxHistory}</maxHistory>  
+            <fileNamePattern>${logPath}/${serverName}/${serverName}.%d{yyyy-MM-dd}.log</fileNamePattern>  
+            <maxHistory>${maxHistory_file}</maxHistory>  
         </rollingPolicy>  
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<pattern>${FILE_LOG_PATTERN}</pattern>
+			<pattern>${MICRO_FILE_LOG_PATTERN}</pattern>
 		</encoder>
-    </appender>   -->
-    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+    </appender>  
+    
+    <appender name="file2beat" class="ch.qos.logback.core.rolling.RollingFileAppender">  
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
-            <fileNamePattern>${logPath}/${serverName}/${serverName}-%d{yyyy-MM-dd}.log</fileNamePattern>  
-            <maxHistory>${maxHistory}</maxHistory>  
+            <fileNamePattern>${logPath}/${serverName}/fbeats/${serverName}.%d{yyyy-MM-dd}.json</fileNamePattern>  
+            <maxHistory>${maxHistory_beat}</maxHistory>  
         </rollingPolicy>  
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<pattern>
-				{"@timestamp":%d{yyyy-MM-dd HH:mm:ss.SSS},"host":"%sh","@version":1,"severity": "%level","service": "${serverName:-}","trace": "%X{X-B3-TraceId:-}","span": "%X{X-B3-SpanId:-}","parent": "%X{X-B3-ParentSpanId:-}","exportable": "%X{X-Span-Export:-}","pid": "${PID:-}","thread": "%thread","class": "%logger{40}","rest": "%message"}%n
+				{"runtime":"%d{yyyy-MM-dd HH:mm:ss.SSS}","host":"%sh","severity": "%level","service": "${serverName:-}","trace": "%X{X-B3-TraceId:-}","span": "%X{X-B3-SpanId:-}","parent": "%X{X-B3-ParentSpanId:-}","exportable": "%X{X-Span-Export:-}","pid": "${PID:-}","thread": "%thread","class": "%logger","rest": "%message"}%n
 			</pattern>
 		</encoder>
-    </appender>  
-    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-    	<!-- <file>${LOG_FILE}.json</file> -->
-    	<!-- <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_FILE}.json.%d{yyyy-MM-dd}.gz</fileNamePattern>
-			<maxHistory>7</maxHistory>
-		</rollingPolicy> -->
-		<destination>10.110.60.182:4560</destination>
-    	<encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-    		<!-- <charset>utf-8</charset> -->
-    		<providers>
-    			<timestamp>
-					<timeZone>UTC</timeZone>
-				</timestamp>
-				<pattern>
-					<pattern>
-						{
-						"severity": "%level",
-						"service": "${serverName:-}",
-						"trace": "%X{X-B3-TraceId:-}",
-						"span": "%X{X-B3-SpanId:-}",
-						"parent": "%X{X-B3-ParentSpanId:-}",
-						"exportable": "%X{X-Span-Export:-}",
-						"pid": "${PID:-}",
-						"thread": "%thread",
-						"class": "%logger{40}",
-						"rest": "%message"
-						}
-					</pattern>
-				</pattern>
-    		</providers>
-    	</encoder>
     </appender>
+
+    <logger name="RocketmqClient" additivity="false">
+        <level value="${logRocketmqLevel}"/>
+        <appender-ref ref="${logAppender}"/>
+    </logger>
+
     <root>  
         <level value="${logLevel}" />  
         <appender-ref ref="${logAppender}" />
-        <!-- <appender-ref ref="logstash"/> -->
+         <appender-ref ref="file2beat" />
     </root>  
 </configuration>   

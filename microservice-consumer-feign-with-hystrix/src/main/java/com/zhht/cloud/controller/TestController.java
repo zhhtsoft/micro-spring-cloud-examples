@@ -20,11 +20,12 @@ public class TestController {
 
 	@RequestMapping(value="/getUserById/{id}")
 	
-	@HystrixCommand(fallbackMethod="fallbackUser")
+//	@HystrixCommand(fallbackMethod="fallbackUser")
 	public User getUserInfo(@PathVariable("id") int id){
 		/*return RestTemplate.getForObject("http://microservice-provider/user/getUserById?id="+id, User.class
 				);*/
-		return userFeignClient.getUserById(id);
+		User user = userFeignClient.getUserById(id);
+		return user==null?new User():user;
 		
 	}
 	

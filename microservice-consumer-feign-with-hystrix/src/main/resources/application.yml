@@ -3,7 +3,7 @@ server:
   
 spring:
   application:
-    name: microservice-consumer-feign-hystrix
+    name: microservice-consumer-feign-with-hystrix
     
 security:
   user:
@@ -15,7 +15,28 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7000/eureka/
+      defaultZone: http://${security.user.name}:${security.user.password}@localhost:7100/eureka/
       
 #需要启用hystrix配置
-feign.hystrix.enabled: true
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+       loggerLevel: BASIC
+com:
+  zhht:
+    micro:
+      enabled: true
+      serverstates:
+        microservice-provider: true #(或者off)
+        microservice-provider2: true #(或者on)
+        
+        
+logging:
+   level:
+    ROOT: info
+    com.zhht.feign: debug
+
+            
